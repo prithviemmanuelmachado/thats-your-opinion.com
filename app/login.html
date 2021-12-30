@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap 4 CSS files -->
+    <link rel="stylesheet" href="css/Bootstrap/bootstrap.min.css">
+    <!-- custom CSS -->
+    <link rel="stylesheet" href="css/Emberly/Emberly v1.3/WOFF/Emberly-Regular.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <title>Login - ThatsYourOpinion</title>
+</head>
+<body>
+    <div class="px-3 py-3 header">
+        <div class="row ml-auto">
+            <button 
+                class="btn btn-primary regular-font-size"
+                onclick="location.href = 'index.html';">
+                Home
+            </button>
+        </div>
+    </div>
+    <div class="container my-4 box">
+        <form>
+            <h5 class="heading-font-size">Login</h5>
+            <div class="form-group">
+                <label 
+                    for="Username"
+                    class="regular-font-size">
+                    Username
+                </label>
+                <input type="text" class="regular-font-size form-control">
+            </div>
+            <div class="form-group">
+                <label 
+                    for="Password"
+                    class="regular-font-size">
+                    Password
+                </label>
+                <input type="password" class="regular-font-size form-control">
+            </div>
+            <div id="error-message"></div>
+            
+        </form>
+
+        <button 
+            class="btn btn-primary regular-font-size"
+            onclick="loginUser()">
+            Submit
+        </button>
+        <br><br>
+        <a 
+            href="signup.html" 
+            class="links regular-font-size">
+            Not registered yet? Click here to signup
+        </a>
+    </div>
+
+    <!-- jQuery and js files for bootstrap 4 -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- custom js scripts -->
+    <script src="js/custom.js"></script>
+</body>
+</html>

@@ -4,16 +4,167 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- bootstrap CSS files -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- bootstrap 4 CSS files -->
+    <link rel="stylesheet" href="css/Bootstrap/bootstrap.min.css">
+    <!-- custom CSS -->
+    <link rel="stylesheet" href="css/Emberly/Emberly v1.3/WOFF/Emberly-Regular.css">
+    <link rel="stylesheet" href="css/custom.css">
     <title>Home - ThatsYourOpinion</title>
 </head>
-<body>
+<!-- Calling a function to get all the review items when this page loads -->
+<body onload="getAllReviewItems()">
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a 
+            class="navbar-brand navigation" 
+            href="#">
+            Thats Your Opinion
+        </a>
+        <button 
+            class="navbar-toggler" 
+            type="button" 
+            data-toggle="collapse" 
+            data-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div 
+            class="collapse navbar-collapse" 
+            id="navbarSupportedContent">
+          <div class="form-inline ml-lg-auto">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a 
+                        href="login.html" 
+                        class="nav-link navigation">
+                        Login
+                    </a>
+                </li>
+              </ul>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto my-4">
+
+        <!-- New item for review -->
+        <div class="row">
+            <button 
+                class="btn btn-primary regular-font-size ml-auto"
+                data-toggle="modal" 
+                data-target="#NewModal">
+                New Item
+            </button>
+            <div 
+                class="modal fade" 
+                id="NewModal" 
+                tabindex="-1" 
+                role="dialog" 
+                aria-labelledby="NewModalLabel" 
+                aria-hidden="true">
+                <div 
+                    class="modal-dialog modal-dialog-centered" 
+                    role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 
+                                class="modal-title regular-font-size" 
+                                id="NewModalLabel">
+                                Item Details
+                            </h5>
+                            <button 
+                                type="button" 
+                                class="close"
+                                id="close-modal" 
+                                data-dismiss="modal" 
+                                aria-label="Close">
+                                <span 
+                                    aria-hidden="true"
+                                    class="regular-font-size">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+                        <div class="modal-body regular-font-size">
+                            <form>
+                                <div class="form-group">
+                                    <label for="Title">Title</label>
+                                    <input 
+                                        type="text"
+                                        class="form-control regular-font-size"
+                                        id="Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Contact">Contact Info</label>
+                                    <input 
+                                        type="text"
+                                        class="form-control regular-font-size"
+                                        id="Contact"
+                                        placeholder="Email,test@gmail.com;Mobile,1234567890">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Links">Links (if any)</label>
+                                    <input 
+                                        type="text"
+                                        class="form-control regular-font-size"
+                                        id="Links"
+                                        placeholder="Home:xyz.com;Doc:xys.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Desc">Description</label>
+                                    <textarea 
+                                        class="form-control regular-font-size"
+                                        id="Desc">
+                                    </textarea>
+                                </div>
+                            </form>
+                            <div id="error-message"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button 
+                                type="button" 
+                                class="btn btn-primary regular-font-size"
+                                onclick="addNewReviewItem()">
+                                Publish for reviews
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
+        <!-- Show existing items -->
+        <div 
+            class="row"
+            id="posts-area">
 
-    <!-- jQuery and js files for bootstrap -->
+
+
+        </div>    
+        <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title heading-font-size" id="postModalLabel"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                
+            </div>
+        </div>
+          
+            
+    </div>
+
+    <!-- jQuery and js files for bootstrap 4 -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <!-- custom js scripts -->
+    <script src="js/custom.js"></script>
+
 </body>
 </html>

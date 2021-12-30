@@ -1,0 +1,64 @@
+/* Common components CSS begin */
+
+.box
+{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 15px;
+}
+
+.links
+{
+    text-decoration: none;
+}
+
+.links:hover
+{
+    text-decoration: none;
+}
+
+#error-message
+{
+    font-size: 25px;
+    color: #eb3440;
+}
+
+.heading-font-size
+{
+    font-size: 35px;
+}
+
+.regular-font-size
+{
+    font-size: 25px;
+    text-align: left;
+}
+
+/* Common components CSS end */
+
+/* Home page CSS begin*/
+
+body
+{
+    font-family: Emberly;
+}
+
+.navigation
+{
+    font-size: 38px;
+}
+
+.post-items
+{
+    list-style: none;
+}
+
+/* Home page CSS end */
+
+/* Login and signup page CSS start */
+
+.header
+{
+    border-bottom: 2px solid #afb0b3;
+}
+
+/* Login and signup page CSS end */
