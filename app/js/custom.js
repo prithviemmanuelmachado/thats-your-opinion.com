@@ -1,56 +1,5 @@
-let test = [
-    {
-        "ItemId" : 1,
-        "Title" : "First Item",
-        "Contact" : "Email,Test@124.com;Phone:1111111111",
-        "Links" : "Home,www.google.com;Documentation,www.github.com",
-        "Description" : "Test Description",
-        "Reviews" : [
-            {
-                "By" : "Anonymous", 
-                "Review" : "This is a test review"
-            },
-            {
-                "By" : "User1", 
-                "Review" : "This is a test review"
-            }
-        ]
-    },
-    {
-        "ItemId" : 2,
-        "Title" : "Second Item",
-        "Contact" : "Email,Test@124.com;Mobile:2222211111",
-        "Links" : "Home,www.facebook.com;Documentation,www.github.com",
-        "Description" : "Test Description",
-        "Reviews" : [
-            {
-                "By" : "User2", 
-                "Review" : "This is a test review"
-            },
-            {
-                "By" : "User1", 
-                "Review" : "This is a test review"
-            }
-        ]
-    },
-    {
-        "ItemId" : 3,
-        "Title" : "Third Item",
-        "Contact" : "Email,Test@124.com;Phone:1111111111",
-        "Links" : "Home,www.google.com;Documentation,www.github.com",
-        "Description" : "Test Description",
-        "Reviews" : [
-            {
-                "By" : "Anonymous", 
-                "Review" : "This is a test review"
-            },
-            {
-                "By" : "User1", 
-                "Review" : "This is a test review"
-            }
-        ]
-    }
-];
+
+const baseURI = 'http://localhost:3000';
 
 //function to get all items to be reviwed
 function getAllReviewItems()
@@ -126,10 +75,48 @@ function addNewReviewItem()
 function registerUser()
 {
     console.log("Starting registerUser function");
+
+    const username = document.getElementById("Username").value;
+    const password = document.getElementById("Password").value;
+    const cPassword = document.getElementById("CPassword").value;
+    const error = document.getElementById("error-message");
     
-    //ajax request to add new user to server
-    //if user registerd redirect to login
-    //else show error messagee
+    if(username == "" || password == "" || cPassword == "")
+    {
+        error.innerText = "Please fill all fields"
+    }
+    else
+    {
+        //check if passwords are same
+        if(password == cPassword)
+        {
+            //ajax request to add new user to server
+            const input = { "username":username, "password":password };
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(input)
+            };
+            fetch(baseURI+'/registerUser', requestOptions)
+            .then(res => {
+                return res.json()
+            }).then(data => {
+                //if user not registered print error error
+                if(data.Error)
+                    error.innerText = data.Error;
+                //if user registered redirect to login
+                else 
+                {
+                    alert("Registration successful");
+                    location.href = './login.html';
+                }
+            })
+            .catch(err => console.log(err));
+            
+        }
+        else 
+            error.innerText = "Passwords do not match";
+    }
     
     console.log("Exiting registerUser function");
 }
