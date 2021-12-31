@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 //initalizing variables and dependencies
 const userTable = 'Users';
 const itemTable = 'ReviewItems';
+const reviewTable = 'Reviews';
 const port = 3000;
 const jwtkey = config[0].jwtSecretKey;
 const key = config[0].accessKeyId;
@@ -130,7 +131,116 @@ app.post('/login', (req, res) => {
 
 //api for creating new posts
 app.post('/newItem', (req, res) => {
+  const newItem = req.body;
+  //check if item already exists
+  var params = {
+    TableName: itemTable,
+    Key : {
+      "Title" : newItem.Title
+    },
+    ProjectionExpression : "Title"
+  };
+  client.get(params, (err, data)=>{
+    if(err)
+      console.log(err);
+    else
+    {
+      res.contentType = 'application/json';
+      if(data.Item)
+      {
+        res.status(400);
+        res.json({'Error' : 'This item already exists'});
+      }
+      else
+      {
+        //if user is logged in post as user else ask user to login
+        const token = req.headers.jwt;
+        if(token)
+        {
+          jwt.verify(token, jwtkey, (err, decodedToken)=>{
+            const Title = newItem.Title;
+            const Contact = newItem.Contact;
+            const Links = newItem.Links;
+            const Description = newItem.Desc;
+            const CreatedBy = decodedToken.username;
+            const CreatedOn = new Date().toString();
+            const NoOfStars = 0;
+            const NoOfReviews = 0;
+            const input = {Title, Contact, Links, Description, CreatedBy, CreatedOn, NoOfReviews, NoOfStars};
+            const inputParams = {
+              TableName : itemTable,
+              Item : input
+            }
+            client.put(inputParams, (err, data)=>{
+              if(err)
+              {
+                console.log(err);
+              }
+              else
+              {
+                res.status(200);
+                res.json({"Added" : true});
+              }
+            });
+          });
+        }
+        else
+        {
+          res.status(400);
+          res.json({'Error' : 'Please login to post an item'});
+        }
+        
+      }
+    }
+  });
+  
+  
+  
+});
 
+//api for getting all posts
+app.get('/items', (req, res) => {
+  const params = {
+    TableName : itemTable,
+    ProjectionExpression : "Title, NoOfReviews, NoOfStars"
+  };
+  client.scan(params, (err, data) => {
+    if(err)
+      console.log(err);
+    else
+    {
+      res.contentType = 'application/json';
+      res.status(200);
+      res.json(data.Items);
+    }
+  });
+});
+
+//api to get specific item details
+app.get('/details', (req, res) => {
+  const title = req.query.title;
+  const params = {
+    TableName : itemTable,
+    Key : {
+      'Title' : title
+    }
+  }
+  client.get(params, (err, data) => {
+    if(err)
+      console.log(err);
+    else
+    {
+      res.contentType = 'application/json';
+      res.status(200);
+      res.json(data.Item);
+    }
+  });
+});
+
+//api for posting reviews
+app.post('/newReview', (req, res) => {
+  //if self trying to review send error
+  //else post review
 });
 
 //initiating the server

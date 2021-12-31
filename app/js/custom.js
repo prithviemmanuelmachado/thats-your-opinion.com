@@ -1,36 +1,69 @@
 
 const baseURI = 'http://localhost:3000';
 
+//function to initialize page
+function initializePage()
+{
+    const User = document.getElementById('User');
+    //if user is loggedin show login else show logout
+    if(sessionStorage.getItem('jwt'))
+    {
+        const link = '<a class = "nav-link navigation" href = "./index.html" onclick = "return logout()">Logout</a>';
+        User.innerHTML = link;
+
+    }
+    else
+    {
+        const link = '<a class = "nav-link navigation" href = "./login.html">Login</a>';
+        User.innerHTML = link;
+    }
+    getAllReviewItems();
+}
+
+//function to logout
+function logout()
+{
+    sessionStorage.removeItem('jwt');
+    return true;
+}
+
 //function to get all items to be reviwed
 function getAllReviewItems()
-{
-    const header = new Headers({
-        'jwt' : sessionStorage.getItem('jwt')
-    });
-    fetch(baseURI, {
-        headers : header
-    })
-    .then(response => response.json())
-    .then(data => console.log(data));
+{ 
     
     console.log("Starting getAllReviewItems function");
 
     let postsArea = document.getElementById("posts-area");
-    
+    let list = '';
     //ajax request to get the items from server
         //response should be a list of Item ids and titles
-    //convert json to array of object
-
-    //convert them into a single string with appropriate tags in between them
-    let list = '<ul class="post-items w-100">'
-    let reviewItems = test;
-    reviewItems.forEach(item => {
-        list += '<li class="my-2 w-100"><button type="button" class="btn btn-primary w-100 regular-font-size px-5" data-toggle="modal" data-target="#postModal" data-item-id="'+item.ItemId+'">'+item.Title+'</button></li>';
+    fetch(baseURI+'/items')
+    .then(res => {return res.json()})
+    .then((data) => {
+        data.forEach(item => {
+            const avg = item.NoOfStars / item.NoOfReviews;
+            let card;
+            if(avg > 2 && avg < 4)
+                card = 'text-white bg-primary';
+            else if(isNaN(avg))
+                card = 'text-white bg-primary';
+            else if(avg >= 2)
+                card = 'text-white bg-danger';
+            else
+                card = 'text-white bg-success';
+            list += '<div class="card '+card+' m-2 col-lg-3">';
+            list += '<div class="card-header heading-font-size">'+item.Title+'</div>';
+            list += '<div class="card-body">'
+            list += '<button type="button" class="btn btn-secondary regular-font-size px-5" data-toggle="modal" data-target="#postModal" data-item-id="'+item.Title+'">Details</button>';
+            list += '</div></div>';
+        });
+        //put it into the postArea using innerHTML
+        postsArea.innerHTML = list;
     });
-    list += '</ul>';
 
-    //put it into the postArea using innerHTML
-    postsArea.innerHTML = list;
+    
+
+    
 
     console.log("Exiting getAllReviewItems function");
 
@@ -46,7 +79,48 @@ $('#postModal').on('show.bs.modal', function (event) {
 
     //update details to the modal
     var modal = $(this)
-    modal.find('.modal-title').text(test[id-1].Title);
+    fetch(baseURI + '/details?title='+ id)
+    .then(res => {return res.json()})
+    .then((data)=> {
+        modal.find('.modal-title').text(data.Title);
+        modal.find('#By').text(data.CreatedBy);
+        const contacts = data.Contact.split(";");
+        if(data.Contact == "")
+            modal.find('#Contact').text("");
+        else
+        {
+            let contactList = "";
+            contacts.forEach(element => {
+                let cur = element.split(",");
+                contactList += cur[0] + ' : ' + cur[1] + '<br>';
+            });
+            modal.find('#Contact').html(contactList);
+        }
+        if(data.Links == "")
+            modal.find('#Links').text("");
+        else
+        {
+            const links = data.Links.split(";");
+            let linksList = "";
+            links.forEach(element => {
+                let cur = element.split(",");
+                linksList += cur[0] + ' : ' + cur[1] + '<br>';
+            });
+            modal.find('#Links').html(linksList);
+        }
+        if(data.Description == "")
+            modal.find('#Desc').text("");
+        else
+        {
+            const desc = data.Description.split("\n");
+            let descList = "";
+            desc.forEach(element => {
+                descList += element + '<br>';
+            });
+            modal.find('#Desc').html(descList);
+        }
+    });
+    
   })
 
 //function to add new item to be reviwed
@@ -54,27 +128,42 @@ function addNewReviewItem()
 {
     console.log("Starting addNewReviewItem function");
     
-    //clear error message
-    let errorMessage = document.getElementById("error-message");
-    errorMessage.innerText = "";
+    let Title = document.getElementById("Title").value;
+    let Contact = document.getElementById("Contact").value;
+    let Links = document.getElementById("Links").value;
+    let Desc = document.getElementById("Desc").value;
+    const errorMessage = document.getElementById("error-message");
 
     //ajax request to add the item
         //add token to the header if it exists else the post is anonymous
+    const headers = new Headers();
+    if(sessionStorage.getItem('jwt'))
+    {
+        headers.append('jwt', sessionStorage.getItem('jwt'));
+    }
+    headers.append('Content-Type', 'application/json');
+    const input = {Title , Contact, Links, Desc};
+    fetch(baseURI+'/newItem', {
+        headers : headers,
+        method: 'POST',
+        body: JSON.stringify(input)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.Error)
+            errorMessage.innerText = data.Error;
+        else
+        {
+            Title = "";
+            Contact = "";
+            Links = "";
+            Desc = "";
+            let closeButton = document.getElementById("close-modal");
+            closeButton.click();
+            location.href = './index.html';
+        }
+    });
     
-    //get response here
-    let isItemAdded = true;
-
-    //if item is added close the modal
-    if(isItemAdded)
-    {
-        let closeButton = document.getElementById("close-modal");
-        closeButton.click();
-    }
-    //if item is not added display error message
-    else 
-    {
-        errorMessage.innerText = "Error message here";
-    }
 
     console.log("Exiting addNewReviewItem function");
 

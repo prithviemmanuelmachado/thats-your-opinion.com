@@ -13,7 +13,7 @@
 </head>
 
 <!-- Calling a function to get all the review items when this page loads -->
-<body onload="getAllReviewItems()">
+<body onload="initializePage()">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -38,11 +38,7 @@
           <div class="form-inline ml-lg-auto">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a 
-                        href="login.html" 
-                        class="nav-link navigation">
-                        Login
-                    </a>
+                    <div id="User"></div>
                 </li>
               </ul>
           </div>
@@ -154,7 +150,32 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4 regular-font-size">Author</div>
+                        <div 
+                            class="col-8 regular-font-size"
+                            id="By"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 regular-font-size">Contacts</div>
+                        <div 
+                            class="col-8 regular-font-size"
+                            id="Contact"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 regular-font-size">Links</div>
+                        <div 
+                            class="col-8 regular-font-size"
+                            id="Links"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 regular-font-size">Description</div>
+                        <div 
+                            class="col-8 regular-font-size"
+                            id="Desc"></div>
+                    </div>
+                </div>
             </div>
         </div>
           
