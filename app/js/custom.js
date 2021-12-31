@@ -4,6 +4,15 @@ const baseURI = 'http://localhost:3000';
 //function to get all items to be reviwed
 function getAllReviewItems()
 {
+    const header = new Headers({
+        'jwt' : sessionStorage.getItem('jwt')
+    });
+    fetch(baseURI, {
+        headers : header
+    })
+    .then(response => response.json())
+    .then(data => console.log(data));
+    
     console.log("Starting getAllReviewItems function");
 
     let postsArea = document.getElementById("posts-area");
@@ -126,11 +135,35 @@ function loginUser()
 {
     console.log("Starting loginUser function");
 
+    const username = document.getElementById("Username").value;
+    const password = document.getElementById("Password").value;
+    const error = document.getElementById("error-message");
+    
     //ajax request to the login user to the server
-    //if correct credentials are sent 
-        //token recived and stored in local storage
-        //redirected to home page
-    //else show error message
+    const input = { "username":username, "password":password };
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input)
+    };
+    fetch(baseURI+'/login', requestOptions)
+    .then(res => { 
+        return res.json();
+    }).then(data => {
+        //if correct credentials are sent 
+            //token recived and stored in session storage
+            //redirected to home page
+        if(data.jwt)
+        {
+            alert("Logged in");
+            sessionStorage.setItem('jwt', data.jwt);
+            location.href = './index.html';
+        }
+        //else show error message
+        else
+            error.innerText = data.Error;
+    });
+    
 
     console.log("Exiting loginUser function");
 }
