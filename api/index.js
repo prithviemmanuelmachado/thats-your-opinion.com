@@ -230,17 +230,128 @@ app.get('/details', (req, res) => {
       console.log(err);
     else
     {
-      res.contentType = 'application/json';
-      res.status(200);
-      res.json(data.Item);
+      const reviewParams = {
+        TableName : reviewTable,
+        FilterExpression: 'Title = :title',
+        ExpressionAttributeValues: {
+          ":title": title
+        },
+        ProjectionExpression : "Stars, CreatedBy, Review"
+      }
+      client.scan(reviewParams, (err, iData) => {
+        if(err)
+          console.log(err);
+        else
+        {
+          data.Item.Reviews = iData.Items;
+          res.contentType = 'application/json';
+          res.status(200);
+          res.json(data.Item);
+        }
+      });
+      
     }
   });
 });
 
 //api for posting reviews
 app.post('/newReview', (req, res) => {
-  //if self trying to review send error
-  //else post review
+  //if logged in check if self posing review
+  const token = req.headers.jwt;
+  res.contentType = 'application/json';
+  if(token)
+  {
+    jwt.verify(token, jwtkey, (err, decodedToken)=>{
+      const username = decodedToken.username;
+      const items = req.body;
+      const params = {
+        TableName : itemTable,
+        Key : {
+          'Title' : items.title
+        },
+        ProjectionExpression : "CreatedBy"
+      }
+      client.get(params, (err, data) => {
+        if(err)
+          console.log(err);
+        else
+        {
+          if(data.Item.CreatedBy == username)
+          {
+            res.status(400);
+            res.json({'Error': 'You cannot post a review'});
+          }
+          else
+          {
+            const date = new Date().toString();
+            const Id = Math.random() +""+ username + "" + date;
+            const input = {
+              'Id' : Id, 
+              'CreatedBy' : username, 
+              'Stars' : items.stars, 
+              'Title' : items.title, 
+              'Review' : items.review, 
+              'CreatedOn' : date
+            };
+            const inputParams = {
+              TableName : reviewTable,
+              Item : input
+            }
+            client.put(inputParams, (err, data) => {
+              if(err)
+                console.log(err);
+              else
+              {
+                //update the review counter on item table
+                const getUpdateParams = { 
+                  TableName : itemTable,
+                  Key : {
+                    "Title" : items.title
+                  },
+                  ProjectionExpression : "NoOfStars, NoOfReviews"
+                }
+                client.get(getUpdateParams, (err, gUData) => {
+                  if(err)
+                    console.log(err);
+                  else
+                  {
+                    let stars = parseInt(gUData.Item.NoOfStars, 10);
+                    let reviews = parseInt(gUData.Item.NoOfReviews, 10);
+                    var updateParams = {
+                      TableName: itemTable,
+                      Key:{
+                          "Title": items.title
+                      },
+                      UpdateExpression: "set NoOfReviews = :r, NoOfStars = :s",
+                      ExpressionAttributeValues:{
+                          ":r": reviews + 1,
+                          ":s": stars + parseInt(items.stars, 10)
+                      }
+                    };
+                    client.update(updateParams, (err, uData) =>{
+                      if(err)
+                        console.log(err)
+                      else
+                      {
+                        res.status(200);
+                        res.json({'Added' : true});
+                      }
+                    })
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
+    });
+  }
+  //else send error
+  else
+  {
+    res.status(400);
+    res.json({'Error': 'Please login to post reviews'});
+  }
 });
 
 //initiating the server

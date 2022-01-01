@@ -175,6 +175,36 @@
                             class="col-8 regular-font-size"
                             id="Desc"></div>
                     </div>
+                    <div 
+                        id="error-message-new">
+                    </div>
+                    <div class="row">
+                        <input 
+                            type="text" 
+                            class="col-sm-7 mx-2 my-1 regular-font-size form-control"
+                            id="new-review"
+                            data-title="">
+                        <select 
+                            name="stars" 
+                            id="stars"
+                            class="col-sm-2 form-control my-1 regular-font-size">
+                            <option value="NaN" selected>How many stars?</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+
+                        </select>
+                        <button 
+                            class="btn btn-primary regular-font-size mx-1 my-1 col-sm-2"
+                            onclick="postReview()">
+                            Submit
+                        </button>
+                    </div>
+                    <div class="row" id="reviews">
+                        
+                    </div>
                 </div>
             </div>
         </div>

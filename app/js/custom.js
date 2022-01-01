@@ -47,7 +47,7 @@ function getAllReviewItems()
                 card = 'text-white bg-primary';
             else if(isNaN(avg))
                 card = 'text-white bg-primary';
-            else if(avg >= 2)
+            else if(avg <= 2)
                 card = 'text-white bg-danger';
             else
                 card = 'text-white bg-success';
@@ -119,9 +119,18 @@ $('#postModal').on('show.bs.modal', function (event) {
             });
             modal.find('#Desc').html(descList);
         }
+        modal.find('#new-review').attr('data-title', data.Title);
+        let reviewlist = '<ul class = "review-items w-100">'
+        data.Reviews.forEach(element => {
+            reviewlist += '<li class = "regular-font-size review-li w-100">'+element.CreatedBy + ' says <br>';
+            reviewlist += element.Review + '<br>';
+            reviewlist += 'Rating : ' + element.Stars +'<li>'; 
+        });
+        reviewlist += '</ul>'
+        modal.find('#reviews').html(reviewlist);
     });
     
-  })
+});
 
 //function to add new item to be reviwed
 function addNewReviewItem()
@@ -255,4 +264,39 @@ function loginUser()
     
 
     console.log("Exiting loginUser function");
+}
+
+//function to post a review
+function postReview()
+{
+    const reviewInput = document.getElementById('new-review');
+    const stars = document.getElementById('stars').value;
+    const title = reviewInput.getAttribute('data-title');
+    const err = document.getElementById('error-message-new');
+
+    if(stars == "NaN")
+    {
+        err.innerText = "Please select a rating"
+    }
+    else
+    {
+        const input = { "title" : title, "review" : reviewInput.value, "stars" : stars };
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        if(sessionStorage.getItem('jwt'))
+            headers.append('jwt', sessionStorage.getItem('jwt'))
+        const requestOptions = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(input)
+        };
+        fetch(baseURI+'/newReview', requestOptions)
+        .then(res => {return res.json()})
+        .then(data => {
+            if(data.Error)
+                err.innerText = data.Error;
+            else
+                location.href = "./index.html";
+        }); 
+    }
 }

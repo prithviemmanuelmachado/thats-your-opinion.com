@@ -21,6 +21,11 @@
     font-size: 25px;
     color: #eb3440;
 }
+#error-message-new
+{
+    font-size: 25px;
+    color: #eb3440;
+}
 
 .heading-font-size
 {
@@ -30,7 +35,6 @@
 .regular-font-size
 {
     font-size: 25px;
-    text-align: left;
 }
 
 /* Common components CSS end */
@@ -47,10 +51,16 @@ body
     font-size: 38px;
 }
 
-.post-items
+.review-items
 {
     list-style: none;
 }
+
+.review-li
+{
+    border-bottom: #afb0b3 solid 1px;
+}
+
 
 /* Home page CSS end */
 
