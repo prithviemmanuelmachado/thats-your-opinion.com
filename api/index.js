@@ -10,7 +10,6 @@ const jwt = require('jsonwebtoken');
 const userTable = 'Users';
 const itemTable = 'ReviewItems';
 const reviewTable = 'Reviews';
-const port = 3000;
 const jwtkey = config[0].jwtSecretKey;
 const key = config[0].accessKeyId;
 const password = config[0].secretAccessKey;
@@ -354,9 +353,7 @@ app.post('/newReview', (req, res) => {
   }
 });
 
-//initiating the server
-app.listen(port, () => {
-  console.log(`Server listening on port localhost:${port}!`)
-});
+//exporting app
+module.exports = app;
 
 
