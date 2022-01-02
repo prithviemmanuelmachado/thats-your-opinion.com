@@ -1,5 +1,5 @@
 
-const baseURI = 'http://localhost:3000';
+const baseURI = 'https://e9s881bmf6.execute-api.ap-south-1.amazonaws.com/production';
 
 //function to initialize page
 function initializePage()
