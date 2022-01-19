@@ -1,3 +1,4 @@
+//this is where we upload to lambda
 const awsServerlessExpress = require('aws-serverless-express');
 const app = require('./index.js');
 const server = awsServerlessExpress.createServer(app)

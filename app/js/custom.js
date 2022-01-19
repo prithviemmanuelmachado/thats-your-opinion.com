@@ -4,6 +4,7 @@ const baseURI = 'https://e9s881bmf6.execute-api.ap-south-1.amazonaws.com/product
 //function to initialize page
 function initializePage()
 {
+    //getting the element with id user from the DOM
     const User = document.getElementById('User');
     //if user is loggedin show login else show logout
     if(sessionStorage.getItem('jwt'))
